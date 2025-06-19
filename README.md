@@ -9,6 +9,9 @@ Make sure that there aren't any sections or pages with syncing errors, or the ex
 
 If the `/Backups` folder has pre-existing notebook exports, those notebooks will be skipped during the export process.
 
+## Why did I make this?
+I just graduated from university, and I stored all of my class notes from junior year onward in individual OneNote notebooks. As I didn't want to manually export each and every notebook myself, I wrote up a quick script that would do it for me. You'll need to load every notebook you want to export into OneNote Desktop, but that's a small price to pay for fully automated batch exports.
+
 
 ---
 
