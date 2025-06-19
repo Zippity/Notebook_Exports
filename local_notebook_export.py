@@ -33,22 +33,16 @@ def sanitize_name(name):
         name = name.replace(char, '_')
     return name
 
-# Usage example
-xsd_path = "0336.OneNoteApplication_2013.xsd"  # Your local XSD file
+xsd_path = "0336.OneNoteApplication_2013.xsd"  # OneNote 2013 schema xsd
 onenote = win32.gencache.EnsureDispatch('OneNote.Application')
 hierarchy = ""
-hierarchy = onenote.GetHierarchy("", 2)
+hierarchy = onenote.GetHierarchy("", 2) # gets all local notebooks and unfiled notes
 
 root = validate_with_xsd(hierarchy, xsd_path)
 if root is not None:
     print("XML successfully validated against schema")
-
-root = ET.fromstring(hierarchy)
-
-tree = ET.ElementTree(root)
-
-tree.write("hierarchy.xml", encoding="utf-8", xml_declaration=True, pretty_print=True)
-# print(ET.tostring(root, pretty_print=True, encoding="unicode"))
+    tree = ET.ElementTree(root)
+    tree.write("hierarchy.xml", encoding="utf-8", xml_declaration=True, pretty_print=True)
 
 notebook_tag = '{http://schemas.microsoft.com/office/onenote/2013/onenote}Notebook'
 
@@ -60,28 +54,17 @@ failed_exports = []
 
 for child in tqdm(root.iter(tag=notebook_tag), total=iter_count):
     notebook_dict = child.attrib
-    # try:
-        # print(notebook_dict.tag)
     tqdm.write(f"Exporting: {notebook_dict["name"]}")
-    # if notebook_dict['name'] != notebook_dict['nickname']:
-    #     print(f"{notebook_dict['name']} has nickname mismatch: {notebook_dict['nickname']}")
-    
-    # if input("Export? ") != 'y':
-    #     continue
     
     notebook_id = notebook_dict['ID']
     notebook_name = notebook_dict['name']
-    export_path = Path(__file__).parent.absolute() / "Backups" / sanitize_name(notebook_name)
+    export_path = (Path(__file__).parent.absolute() / "Backups" / sanitize_name(notebook_name)).with_suffix(".onepkg")
     
-    export_path = str(export_path) + ".onepkg"
-    
+    # Skips already exported notebooks
     if Path(export_path).exists():
         continue
     
-    # if input(f"Export path: \n{export_path}\nContinue? ") != 'y':
-    #     continue
-    
-    onenote.Publish(notebook_id, export_path, 1)
+    onenote.Publish(notebook_id, str(export_path), 1)
 
     # Wait until the file exists and is stable in size
     max_wait = 300  # seconds
@@ -101,5 +84,5 @@ for child in tqdm(root.iter(tag=notebook_tag), total=iter_count):
             failed_exports.append(notebook_name)
             
 if len(failed_exports) != 0:
-    print("failed exports:")
+    print("problematic exports:")
     pprint.pprint(failed_exports)
