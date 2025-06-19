@@ -58,6 +58,7 @@ if __name__ == "__main__":
     iter_count = sum(1 for _ in root.iter(tag=notebook_tag))
     print(f"{iter_count} notebooks to process")
 
+    completed_exports = []
     failed_exports = []
 
     for child in tqdm(root.iter(tag=notebook_tag), total=iter_count):
@@ -96,6 +97,11 @@ if __name__ == "__main__":
             if not export_path.exists():
                 failed_exports.append(notebook_name)
                 
+        completed_exports.append(notebook_name)
+                
+    if completed_exports:
+        print("completed exports:")
+        pprint.pprint(completed_exports)
     if failed_exports:
         print("failed exports:")
         pprint.pprint(failed_exports)
