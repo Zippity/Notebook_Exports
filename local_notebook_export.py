@@ -62,15 +62,20 @@ if __name__ == "__main__":
 
     for child in tqdm(root.iter(tag=notebook_tag), total=iter_count):
         notebook_dict = child.attrib
-        tqdm.write(f"Exporting: {notebook_dict['name']}")
-        
         notebook_id = notebook_dict['ID']
         notebook_name = notebook_dict['name']
-        export_path = (Path(__file__).parent.absolute() / "Backups" / sanitize_name(notebook_name)).with_suffix(".onepkg")
+        
+        export_path: Path = (Path(__file__).parent.absolute() / "Backups" / sanitize_name(notebook_name)).with_suffix(".onepkg")
+        
+        tqdm.write(f"Exporting: {notebook_dict['name']}")
         
         # Skips already exported notebooks
         if export_path.exists():
+            tqdm.write(f"{notebook_name} already exported, skipping")
             continue
+        
+        if notebook_name != sanitize_name(notebook_name):
+            tqdm.write(f"Notebook '{notebook_name}' being saved as {export_path.name}")
         
         onenote.Publish(notebook_id, str(export_path), 1)
 
@@ -92,5 +97,5 @@ if __name__ == "__main__":
                 failed_exports.append(notebook_name)
                 
     if failed_exports:
-        print("problematic exports:")
+        print("failed exports:")
         pprint.pprint(failed_exports)
