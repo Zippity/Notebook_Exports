@@ -13,10 +13,10 @@ If the `/Backups` folder has pre-existing notebook exports, those notebooks will
 ---
 
 ## Prerequisites
-- Windows OS
+- Windows
 - OneNote Desktop (Office 2016/2019/365, not the Windows 10/UWP version)
 - Python 3.7+
-- OneNote must be installed and *registered for COM automation - see this [Stack Overflow](https://stackoverflow.com/a/22098588) post for more information*
+- OneNote must be installed and **registered for COM automation** - *see this [Stack Overflow](https://stackoverflow.com/a/22098588) post for more information*
 
 ## Installation
 1. Clone or download this repository.
