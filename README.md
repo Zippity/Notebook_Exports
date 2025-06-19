@@ -1,7 +1,7 @@
 # OneNote Desktop Local Notebook Exporter
 
 Uses OneNote Win32 COM API to export all locally stored notebooks into a folder called `/Backups` as `.onepkg` files. 
-A `hierarchy.xml` file containing all local notebooks will also be generated.
+A `hierarchy.xml` file containing local notebook metadata will also be generated.
 
 Notebook names are automatically sanitized for Windows filesystem naming schemes. Notebook files use the name of a given notebook, not its nickname.
 
